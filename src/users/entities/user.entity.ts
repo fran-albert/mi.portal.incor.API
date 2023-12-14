@@ -1,5 +1,6 @@
 import { City } from "src/cities/entities/city.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Role } from "src/common/enums/role.enum";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -37,4 +38,10 @@ export class User {
 
     @Column()
     photo: string;
+
+    @Column('simple-array')
+    role: Role[];
+  
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
