@@ -59,34 +59,42 @@ export class UsersService {
   }
 
   async changePassword(
+    id: number,
     user: UserActiveInterface,
     changePasswordDto: ChangePasswordDto,
   ) {
-    // const { currentPassword, newPassword } = changePasswordDto;
-    // console.log('Email:', user.email);
-    // const userId = await this.findUserIdByEmail(user.email);
-    // console.log('userId:', userId);
-    // await this.findByEmailWithPassword(user.email);
-    // console.log('user:', user);
-    // console.log('currentPassword:', currentPassword);
-    // // console.log('user.password:', user.password);
-    // console.log('newPassword:', newPassword);
-    // Verificar que la contraseña actual es correcta
-    // const isMatch = await bcryptjs.compare(currentPassword, user.password);
-    // if (!isMatch) {
-    //   throw new BadRequestException('Contraseña actual incorrecta');
-    // }
-    // // Encriptar la nueva contraseña
-    // const hashedPassword = await bcryptjs.hash(newPassword, 10);
-    // // Actualizar la contraseña del usuario
-    // user.password = hashedPassword;
-    // await this.userRepository.save(user);
-    // return { message: 'Contraseña cambiada con éxito' };
+    await this.findOne(id);
+    const userWithPassword = await this.findByEmailWithPassword(user.email);
+
+    await this.isMatchPassword(
+      changePasswordDto.currentPassword,
+      userWithPassword.password,
+    );
+
+    if (!changePasswordDto.passwordsMatch()) {
+      throw new BadRequestException('Las contraseñas nuevas no coinciden.');
+    }
+
+    const hashedPassword = await this.hashPassword(
+      changePasswordDto.newPassword,
+    );
+
+    userWithPassword.password = hashedPassword;
+
+    return await this.userRepository.save(userWithPassword);
   }
 
   async hashPassword(password: string) {
     const salt = await bcryptjs.genSalt(10);
     return bcryptjs.hash(password, salt);
+  }
+
+  async isMatchPassword(password: string, hashedPassword: string) {
+    const isMatch = await bcryptjs.compare(password, hashedPassword);
+    if (!isMatch) {
+      throw new BadRequestException('Contraseña actual incorrecta');
+    }
+    return isMatch;
   }
 
   async remove(id: number) {

@@ -50,9 +50,8 @@ export class UsersController {
   async changePassword(
     @Param('id') id: number,
     @ActiveUser() user: UserActiveInterface,
-    @Body() body,
+    @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    console.log(id, user, body);
-    // return this.usersService.changePassword(user, changePasswordDto);
+    return this.usersService.changePassword(id, user, changePasswordDto);
   }
 }
