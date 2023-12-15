@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { CitiesModule } from './cities/cities.module';
 import { StatesModule } from './states/states.module';
 import { AuthModule } from './auth/auth.module';
+import { LabsModule } from './labs/labs.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthModule } from './auth/auth.module';
     CitiesModule,
     StatesModule,
     AuthModule,
+    LabsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
