@@ -1,14 +1,15 @@
-import { Transform } from 'class-transformer';
 import {
-  IsDate,
+  IsArray,
   IsDateString,
   IsEmail,
+  IsEnum,
   IsInt,
   IsOptional,
   IsPositive,
   IsString,
   MinLength,
 } from 'class-validator';
+import { Role } from 'src/common/enums/role.enum';
 export class CreateUserDto {
   @IsString()
   @MinLength(1)
@@ -22,10 +23,6 @@ export class CreateUserDto {
 
   @IsEmail()
   email: string;
-
-  @IsString()
-  @Transform(({ value }) => value.trim())
-  password: string;
 
   @IsDateString()
   birthDate: Date;
@@ -43,4 +40,8 @@ export class CreateUserDto {
 
   @IsString()
   healthInsurance: string;
+
+  @IsArray()
+  @IsEnum(Role)
+  role?: Role[];
 }
