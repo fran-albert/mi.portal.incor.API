@@ -16,7 +16,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/common/enums/role.enum';
 
-@Auth(Role.PACIENTE)
+// @Auth(Role.PACIENTE)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -29,6 +29,11 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Get('/patients')
+  async getPatients() {
+    return this.usersService.getPatients();
   }
 
   @Get(':id')
@@ -50,9 +55,8 @@ export class UsersController {
   async changePassword(
     @Param('id') id: number,
     @ActiveUser() user: UserActiveInterface,
-    @Body() body,
+    @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    console.log(id, user, body);
-    // return this.usersService.changePassword(user, changePasswordDto);
+    return this.usersService.changePassword(id, user, changePasswordDto);
   }
 }
