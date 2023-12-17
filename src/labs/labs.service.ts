@@ -31,8 +31,15 @@ export class LabsService {
     return `This action returns all labs`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lab`;
+  async findOne(id: number) {
+    const lab =  await this.labRepository.findOneBy({ id });
+
+    if (!lab) {
+      throw new BadRequestException('Lab not found');
+    }
+
+    return lab;
+
   }
 
   update(id: number, updateLabDto: UpdateLabDto) {
