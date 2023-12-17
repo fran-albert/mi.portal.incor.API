@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcryptjs from 'bcryptjs';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { UserActiveInterface } from 'src/common/interface/user-active.interface';
+import { UserActiveInterface } from '../common/interface/user-active.interface';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +15,16 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
   async create(createUserDto: CreateUserDto) {
-    return await this.userRepository.save(createUserDto);
+    await this.findOneByEmail(createUserDto.email);
+
+    const newUser = {
+      ...createUserDto,
+      password: await this.hashPassword(createUserDto.dni),
+      city: { id: createUserDto.idCity },
+      role: createUserDto.role,
+    };
+
+    return await this.userRepository.save(newUser);
   }
 
   async findAll() {
@@ -33,7 +42,13 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    return this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ email });
+
+    if (user) {
+      throw new BadRequestException('User already exists');
+    }
+
+    return user;
   }
 
   async findByEmailWithPassword(email: string) {
