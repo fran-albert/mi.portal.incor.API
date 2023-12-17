@@ -1,6 +1,9 @@
-import { IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 export class CreateDataLabDto {
+  @IsInt()
+  idLab: number;
+
   @IsString()
   ldh: string;
 
