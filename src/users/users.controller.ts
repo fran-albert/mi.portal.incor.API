@@ -31,6 +31,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('/patients')
+  async getPatients() {
+    return this.usersService.getPatients();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);

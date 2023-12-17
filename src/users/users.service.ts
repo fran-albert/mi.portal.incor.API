@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import * as bcryptjs from 'bcryptjs';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserActiveInterface } from '../common/interface/user-active.interface';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +30,16 @@ export class UsersService {
 
   async findAll() {
     return await this.userRepository.find();
+  }
+
+  async getPatients() {
+    const patients = await this.userRepository.find({
+      where: {
+        role: Role.PACIENTE,
+      },
+    });
+
+    return patients;
   }
 
   async findOne(id: number) {
