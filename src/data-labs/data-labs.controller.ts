@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DataLabsService } from './data-labs.service';
 import { CreateDataLabDto } from './dto/create-data-lab.dto';
 import { UpdateDataLabDto } from './dto/update-data-lab.dto';
@@ -18,17 +26,17 @@ export class DataLabsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.dataLabsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.dataLabsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDataLabDto: UpdateDataLabDto) {
-    return this.dataLabsService.update(+id, updateDataLabDto);
+  update(@Param('id') id: number, @Body() updateDataLabDto: UpdateDataLabDto) {
+    return this.dataLabsService.update(id, updateDataLabDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.dataLabsService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.dataLabsService.remove(id);
   }
 }
