@@ -16,11 +16,12 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/common/enums/role.enum';
 
-// @Auth(Role.PACIENTE)
+@Auth(Role.PACIENTE)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Auth(Role.SECRETARIA)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
@@ -31,6 +32,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Auth(Role.MEDICO, Role.SECRETARIA)
   @Get('/patients')
   async getPatients() {
     return this.usersService.getPatients();

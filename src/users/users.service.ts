@@ -33,12 +33,11 @@ export class UsersService {
   }
 
   async getPatients() {
-    const patients = await this.userRepository.find({
-      where: {
-        role: Role.PACIENTE,
-      },
-    });
-
+    const patients = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.city', 'city')
+      .where('user.role LIKE :roles', { roles: `%${Role.PACIENTE}%` })
+      .getMany();
     return patients;
   }
 
@@ -56,7 +55,7 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({ email });
 
     if (user) {
-      throw new BadRequestException('User already exists');
+      throw new BadRequestException('El correo electrónico ya está en uso.');
     }
 
     return user;
