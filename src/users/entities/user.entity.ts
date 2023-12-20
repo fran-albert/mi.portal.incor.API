@@ -37,7 +37,7 @@ export class User {
   @Column({ length: 50 })
   phone: string;
 
-  @ManyToOne(() => City, (city) => city.users, { nullable: false })
+  @ManyToOne(() => City, (city) => city.users, { nullable: false, eager: true })
   @JoinColumn({ name: 'idCity' })
   city: City;
 
@@ -53,6 +53,6 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => Lab, (lab) => lab.user)
+  @OneToMany(() => Lab, (lab) => lab.user, { eager: true })
   labs: Lab[];
 }
