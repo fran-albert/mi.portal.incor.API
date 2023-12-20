@@ -41,7 +41,6 @@ export class CreateUserDto {
   @IsString()
   healthInsurance: string;
 
-  @IsArray()
-  @IsEnum(Role)
+  @IsEnum(Role, { each: true })
   role?: Role[];
 }
