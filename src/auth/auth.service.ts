@@ -37,7 +37,7 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const user = await this.userService.findByEmailWithPassword(loginDto.email);
     if (!user) {
-      throw new UnauthorizedException('Email is wrong');
+      throw new UnauthorizedException('El correo electrónico es incorrecto');
     }
 
     const isPasswordValid = await bcryptjs.compare(
@@ -46,19 +46,28 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Password is wrong');
+      throw new UnauthorizedException('Contraseña incorrecta');
     }
 
-    const payload = { email: user.email, roles: user.role };
+    const payload = { email: user.email, roles: user.role, id: user.id };
     const token = await this.jwtService.signAsync(payload);
 
     return {
       token,
       email: user.email,
+      id: user.id,
     };
   }
 
-  async getProfile({ email, roles }: { email: string; roles: string }) {
-    return await this.userService.findOneByEmail(email);
+  async getProfile({
+    email,
+    roles,
+    id,
+  }: {
+    email: string;
+    roles: string;
+    id: number;
+  }) {
+    return await this.userService.findOne(id);
   }
 }
