@@ -41,6 +41,15 @@ export class UsersService {
     return patients;
   }
 
+  async getDoctors() {
+    const doctors = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.city', 'city')
+      .where('user.role LIKE :roles', { roles: `%${Role.MEDICO}%` })
+      .getMany();
+    return doctors;
+  }
+
   async findOne(id: number) {
     const user = await this.userRepository.findOneBy({ id });
 
