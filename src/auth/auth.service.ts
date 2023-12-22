@@ -59,15 +59,7 @@ export class AuthService {
     };
   }
 
-  async getProfile({
-    email,
-    roles,
-    id,
-  }: {
-    email: string;
-    roles: string;
-    id: number;
-  }) {
+  async getProfile(id: number) {
     return await this.userService.findOne(id);
   }
 }
