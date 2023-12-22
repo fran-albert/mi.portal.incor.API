@@ -38,6 +38,12 @@ export class UsersController {
     return this.usersService.getPatients();
   }
 
+  @Auth(Role.SECRETARIA)
+  @Get('/doctors')
+  async getDoctors() {
+    return this.usersService.getDoctors();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);
