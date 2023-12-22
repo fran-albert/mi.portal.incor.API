@@ -44,7 +44,7 @@ export class User {
   @Column({ nullable: false })
   birthDate: Date;
 
-  @Column()
+  @Column({ nullable: true})
   photo: string;
 
   @Column('simple-array')
