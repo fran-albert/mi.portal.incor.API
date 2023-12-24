@@ -8,12 +8,15 @@ import * as bcryptjs from 'bcryptjs';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserActiveInterface } from '../common/interface/user-active.interface';
 import { Role } from 'src/common/enums/role.enum';
+import { v4 as uuidv4 } from 'uuid';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private uploadService: UploadService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     await this.findOneByEmail(createUserDto.email);
@@ -84,12 +87,43 @@ export class UsersService {
     });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+    file: Express.Multer.File,
+  ) {
     await this.findOne(id);
+    await this.validateFile(file);
+    const uniqueFileName = this.generateFileName();
+    const fileNameWithExtension = `${uniqueFileName}`;
+    const mimeType = 'image/jpeg';
 
-    return await this.userRepository.update(id, {
+    await this.uploadService.uploadFile(
+      file.buffer,
+      'storage/avatar',
+      fileNameWithExtension,
+      mimeType,
+    );
+
+    return this.userRepository.update(id, {
       ...updateUserDto,
+      photo: uniqueFileName,
     });
+  }
+
+  async validateFile(file: Express.Multer.File): Promise<void> {
+    const allowedMimeTypes = ['image/jpeg', 'image/png'];
+
+    if (!file || !allowedMimeTypes.includes(file.mimetype)) {
+      throw new BadRequestException(
+        'El archivo debe ser una imagen (JPG o PNG)',
+      );
+    }
+  }
+
+  generateFileName(): string {
+    const uniqueFileName = uuidv4();
+    return `${uniqueFileName}`;
   }
 
   async changePassword(
