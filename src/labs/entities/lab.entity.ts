@@ -9,7 +9,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class Lab {
@@ -29,9 +28,7 @@ export class Lab {
   @Column()
   date: Date;
 
-  @Column({
-    default: () => `'${uuidv4()}'`,
-  })
+  @Column()
   file: string;
 
   @DeleteDateColumn()
