@@ -1,13 +1,14 @@
-import { IsDateString, IsInt, IsString } from 'class-validator';
+import { IsDateString, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateLabDto {
-
   @IsInt()
   idPatient: number;
     
   @IsString()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @IsDateString()
-  date: Date;
+  @IsOptional()
+  date?: Date;
 }
