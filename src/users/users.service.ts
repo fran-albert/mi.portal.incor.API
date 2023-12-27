@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -73,11 +77,29 @@ export class UsersService {
     return user;
   }
 
+  async findUserByEmail(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+
+    return user;
+  }
+
   async findByEmailWithPassword(email: string) {
     return this.userRepository.findOne({
       where: { email },
       select: ['id', 'name', 'email', 'password', 'role'],
     });
+  }
+
+  async findOneByResetPasswordToken(resetPasswordToken: string) {
+    const user = await this.userRepository.findOneBy({
+      resetPasswordToken,
+    });
+
+    if (!user) {
+      throw new BadRequestException('Token inválido');
+    }
+
+    return user;
   }
 
   async findByIdWithPassword(id: number) {
@@ -124,6 +146,19 @@ export class UsersService {
       ...updateUserDto,
       photo: file ? uniqueFileName : user.photo,
     };
+  }
+
+  async updatePassword(id: number, newPassword: string): Promise<void> {
+    const hashedPassword = await this.hashPassword(newPassword);
+    await this.userRepository.update(id, {
+      password: hashedPassword,
+    });
+  }
+
+  async updateResetToken(id: number, resetToken: string): Promise<void> {
+    await this.userRepository.update(id, {
+      resetPasswordToken: resetToken,
+    });
   }
 
   async validateFile(file: Express.Multer.File): Promise<void> {
