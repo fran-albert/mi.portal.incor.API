@@ -9,6 +9,9 @@ import { Role } from 'src/common/enums/role.enum';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from 'src/users/users.service';
+import { RequestResetPasswordDto } from './dto/request-reset-password.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -61,5 +64,30 @@ export class AuthService {
 
   async getProfile(id: number) {
     return await this.userService.findOne(id);
+  }
+
+  async requestResetPassword(
+    requestResetPasswordDto: RequestResetPasswordDto,
+  ): Promise<void> {
+    const user = await this.userService.findUserByEmail(
+      requestResetPasswordDto.email,
+    );
+
+    if (!user) {
+      return;
+    }
+
+    const resetToken = uuidv4();
+    user.resetPasswordToken = resetToken;
+    await this.userService.updateResetToken(user.id, resetToken);
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+    const user = await this.userService.findOneByResetPasswordToken(
+      resetPasswordDto.resetPasswordToken,
+    );
+    await this.userService.updatePassword(user.id, resetPasswordDto.password);
+    user.resetPasswordToken = null;
+    await this.userService.updateResetToken(user.id, null); 
   }
 }
