@@ -18,4 +18,9 @@ export class CitiesController {
   findOne(@Param('id') id: string) {
     return this.citiesService.findOne(+id);
   }
+
+  @Get('byState/:idState')
+  findByIdState(@Param('idState') stateId: string) {
+    return this.citiesService.findByIdState(+stateId);
+  }
 }
