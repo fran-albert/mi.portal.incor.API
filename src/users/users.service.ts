@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -92,26 +92,44 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
     file: Express.Multer.File,
   ) {
-    await this.findOne(id);
-    await this.validateFile(file);
-    const uniqueFileName = this.generateFileName();
-    const fileNameWithExtension = `${uniqueFileName}`;
-    const mimeType = 'image/jpeg';
+    const user = await this.findOne(id); // Asumiendo que esto devuelve el usuario actual
 
-    await this.uploadService.uploadFile(
-      file.buffer,
-      'storage/avatar',
-      fileNameWithExtension,
-      mimeType,
-    );
+    let uniqueFileName;
+    if (file) {
+      await this.validateFile(file);
+      uniqueFileName = this.generateFileName();
+      const fileNameWithExtension = `${uniqueFileName}`;
+      const mimeType = 'image/jpeg';
 
-    return this.userRepository.update(id, {
+      await this.uploadService.uploadFile(
+        file.buffer,
+        'storage/avatar',
+        fileNameWithExtension,
+        mimeType,
+      );
+    }
+
+    const updateResult = await this.userRepository.update(id, {
       ...updateUserDto,
-      photo: uniqueFileName,
+      photo: file ? uniqueFileName : undefined,
     });
+
+    if (updateResult.affected === 0) {
+      // Manejar el caso en que no se actualizó ninguna fila
+      throw new NotFoundException(`User with ID "${id}" not found`);
+    }
+
+    return {
+      ...user,
+      ...updateUserDto,
+      photo: file ? uniqueFileName : user.photo,
+    };
   }
 
   async validateFile(file: Express.Multer.File): Promise<void> {
+    if (!file) {
+      return;
+    }
     const allowedMimeTypes = ['image/jpeg', 'image/png'];
 
     if (!file || !allowedMimeTypes.includes(file.mimetype)) {
