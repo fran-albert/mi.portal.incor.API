@@ -12,6 +12,7 @@ import {
 import { Role } from 'src/common/enums/role.enum';
 export class CreateUserDto {
   @IsString()
+  @IsOptional()
   @MinLength(1)
   name: string;
 
@@ -22,6 +23,7 @@ export class CreateUserDto {
   dni: string;
 
   @IsEmail()
+  @IsOptional()
   email: string;
 
   @IsDateString()
