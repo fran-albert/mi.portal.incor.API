@@ -44,7 +44,7 @@ export class User {
   @Column({ nullable: false })
   birthDate: Date;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   photo: string;
 
   @Column('simple-array')
@@ -52,6 +52,14 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Column({
+    type: 'uuid',
+    unique: true,
+    name: 'reset_password_token',
+    nullable: true,
+  })
+  resetPasswordToken: string;
 
   @OneToMany(() => Lab, (lab) => lab.user, { eager: true })
   labs: Lab[];
