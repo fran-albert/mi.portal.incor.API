@@ -10,6 +10,6 @@ export class State {
   @Column()
   state: string;
 
-  @OneToMany(() => City, (city) => city.idState, { eager: true })
-  cities: City[];
+  @OneToMany(() => City, (city) => city.state, {eager: true})
+  cities: City[];  
 }
