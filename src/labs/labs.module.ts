@@ -5,9 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Lab } from './entities/lab.entity';
 import { UsersModule } from 'src/users/users.module';
 import { UploadModule } from 'src/upload/upload.module';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Lab]), UsersModule, UploadModule],
+  imports: [
+    TypeOrmModule.forFeature([Lab]),
+    UsersModule,
+    EmailModule,
+    UploadModule,
+  ],
   controllers: [LabsController],
   providers: [LabsService],
   exports: [LabsService],
