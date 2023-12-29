@@ -114,7 +114,7 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
     file: Express.Multer.File,
   ) {
-    const user = await this.findOne(id); // Asumiendo que esto devuelve el usuario actual
+    const user = await this.findOne(id);
 
     let uniqueFileName;
     if (file) {
@@ -131,13 +131,16 @@ export class UsersService {
       );
     }
 
-    const updateResult = await this.userRepository.update(id, {
+    const updateData = {
       ...updateUserDto,
+      city: updateUserDto.idCity ? { id: updateUserDto.idCity } : undefined,
       photo: file ? uniqueFileName : undefined,
-    });
+    };
+    delete updateData.idCity;
+
+    const updateResult = await this.userRepository.update(id, updateData);
 
     if (updateResult.affected === 0) {
-      // Manejar el caso en que no se actualizó ninguna fila
       throw new NotFoundException(`User with ID "${id}" not found`);
     }
 
