@@ -4,10 +4,12 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { jwtConstants } from "./constants/jwt.constant";
+import { EmailModule } from "src/email/email.module";
 
 @Module({
   imports: [
     UsersModule,
+    EmailModule,
     JwtModule.register({
       global: true, // cualquier servicio  puede utulizar JWT
       secret: jwtConstants.secret, // el secret es la palabra secreta que se ocupa el JWT para verificar que el token se generó es correcto
