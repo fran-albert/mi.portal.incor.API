@@ -12,12 +12,14 @@ import { UsersService } from 'src/users/users.service';
 import { RequestResetPasswordDto } from './dto/request-reset-password.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -80,6 +82,11 @@ export class AuthService {
     const resetToken = uuidv4();
     user.resetPasswordToken = resetToken;
     await this.userService.updateResetToken(user.id, resetToken);
+
+    await this.emailService.sendResetPasswordEmail(
+      user.email,
+      user.resetPasswordToken,
+    );
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
@@ -88,6 +95,6 @@ export class AuthService {
     );
     await this.userService.updatePassword(user.id, resetPasswordDto.password);
     user.resetPasswordToken = null;
-    await this.userService.updateResetToken(user.id, null); 
+    await this.userService.updateResetToken(user.id, null);
   }
 }
