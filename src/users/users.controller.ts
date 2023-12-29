@@ -67,6 +67,7 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 
+  @Auth(Role.MEDICO, Role.SECRETARIA, Role.PACIENTE)
   @Post('/change-password/:id')
   async changePassword(
     @Param('id') id: number,
