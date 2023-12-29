@@ -9,6 +9,8 @@ import { Role } from 'src/common/enums/role.enum';
 import { UploadService } from 'src/upload/upload.service';
 import { v4 as uuidv4 } from 'uuid';
 import { LabResponseDto } from './dto/response-lab.dto';
+import { EmailService } from 'src/email/email.service';
+import { formatDate } from 'src/common/helpers/formatDate';
 
 @Injectable()
 export class LabsService {
@@ -17,6 +19,7 @@ export class LabsService {
     private readonly labRepository: Repository<Lab>,
     private usersService: UsersService,
     private uploadService: UploadService,
+    private readonly emailService: EmailService,
   ) {}
 
   async create(
@@ -50,6 +53,12 @@ export class LabsService {
     labResponse.name = savedLab.name;
     labResponse.date = savedLab.date;
     labResponse.file = savedLab.file;
+
+    await this.emailService.sendLabsEmail(
+      patient.email,
+      patient.name,
+      savedLab.date,
+    );
 
     return labResponse;
   }
