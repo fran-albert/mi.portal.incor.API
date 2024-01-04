@@ -61,9 +61,6 @@ export class UsersController {
     @Body('idCity', ParseIntPipe) idCity: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log(file, 'file')
-    console.log(idCity, 'idCity')
-    console.log(updateUserDto, 'updateUserDto')
     return this.usersService.update(id, updateUserDto, file);
   }
 
