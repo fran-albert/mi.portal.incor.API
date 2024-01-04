@@ -28,7 +28,7 @@ export class AuthService {
     const newPlayer = {
       ...registerDto,
       password: await bcryptjs.hash(registerDto.dni, 10),
-      city: { id: registerDto.idCity },
+      city: { id: Number(registerDto.idCity) },
       role: [Role.PACIENTE],
     };
 
