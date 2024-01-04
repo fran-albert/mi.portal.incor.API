@@ -14,21 +14,25 @@ import { UserActiveInterface } from '../common/interface/user-active.interface';
 import { Role } from 'src/common/enums/role.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { UploadService } from 'src/upload/upload.service';
+import { CitiesService } from 'src/cities/cities.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly citiesService: CitiesService,
     private uploadService: UploadService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     await this.findOneByEmail(createUserDto.email);
 
+    const city = await this.citiesService.findOne(Number(createUserDto.idCity));
+
     const newUser = {
       ...createUserDto,
       password: await this.hashPassword(createUserDto.dni),
-      city: { id: createUserDto.idCity },
+      city,
       role: createUserDto.role,
     };
 
@@ -44,6 +48,7 @@ export class UsersService {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.city', 'city')
       .where('user.role LIKE :roles', { roles: `%${Role.PACIENTE}%` })
+      .orderBy('user.lastName', 'ASC')
       .getMany();
     return patients;
   }
@@ -53,6 +58,7 @@ export class UsersService {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.city', 'city')
       .where('user.role LIKE :roles', { roles: `%${Role.MEDICO}%` })
+      .orderBy('user.lastName', 'ASC')
       .getMany();
     return doctors;
   }
@@ -133,7 +139,7 @@ export class UsersService {
 
     const updateData = {
       ...updateUserDto,
-      city: updateUserDto.idCity ? { id: updateUserDto.idCity } : undefined,
+      city: { id: Number(updateUserDto.idCity) },
       photo: file ? uniqueFileName : undefined,
     };
     delete updateData.idCity;
