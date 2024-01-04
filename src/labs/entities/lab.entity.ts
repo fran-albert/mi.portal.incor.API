@@ -19,7 +19,7 @@ export class Lab {
   @JoinColumn({ name: 'idPatient' })
   user: User;
 
-  @OneToOne(() => DataLab, (datalab) => datalab.lab)
+  @OneToOne(() => DataLab, (datalab) => datalab.lab, { eager: true })
   datalab: DataLab;
 
   @Column()
