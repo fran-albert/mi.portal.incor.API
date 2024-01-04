@@ -3,6 +3,7 @@ import {
   IsDateString,
   IsEmail,
   IsInt,
+  IsNumberString,
   IsOptional,
   IsPositive,
   IsString,
@@ -29,9 +30,8 @@ export class RegisterDto {
   @IsString()
   phone: string;
 
-  @IsInt()
-  @IsPositive()
-  idCity: number;
+  @IsNumberString()
+  idCity: string;
 
   @IsString()
   @IsOptional()
