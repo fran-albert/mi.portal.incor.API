@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsEnum,
   IsInt,
+  IsNumberString,
   IsOptional,
   IsPositive,
   IsString,
@@ -32,9 +33,8 @@ export class CreateUserDto {
   @IsString()
   phone: string;
 
-  @IsInt()
-  @IsPositive()
-  idCity: number;
+  @IsNumberString()
+  idCity: string;
 
   @IsString()
   @IsOptional()
