@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -48,7 +49,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
   }
 
@@ -57,8 +58,12 @@ export class UsersController {
   update(
     @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
+    @Body('idCity', ParseIntPipe) idCity: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    console.log(file, 'file')
+    console.log(idCity, 'idCity')
+    console.log(updateUserDto, 'updateUserDto')
     return this.usersService.update(id, updateUserDto, file);
   }
 
