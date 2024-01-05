@@ -6,6 +6,7 @@ import { Lab } from './entities/lab.entity';
 import { UsersModule } from 'src/users/users.module';
 import { UploadModule } from 'src/upload/upload.module';
 import { EmailModule } from 'src/email/email.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { EmailModule } from 'src/email/email.module';
     UsersModule,
     EmailModule,
     UploadModule,
+    AuthModule,
   ],
   controllers: [LabsController],
   providers: [LabsService],
