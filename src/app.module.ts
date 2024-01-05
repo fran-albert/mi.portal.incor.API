@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -37,7 +37,7 @@ import { EmailModule } from './email/email.module';
             : null,
       },
     }),
-    UsersModule,
+    forwardRef(() => UsersModule),
     CitiesModule,
     StatesModule,
     AuthModule,
