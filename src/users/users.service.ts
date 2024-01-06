@@ -48,7 +48,7 @@ export class UsersService {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.city', 'city')
       .where('user.role LIKE :roles', { roles: `%${Role.PACIENTE}%` })
-      .orderBy('user.lastName', 'ASC')
+      .orderBy('user.lastname', 'ASC')
       .getMany();
     return patients;
   }
@@ -58,7 +58,7 @@ export class UsersService {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.city', 'city')
       .where('user.role LIKE :roles', { roles: `%${Role.MEDICO}%` })
-      .orderBy('user.lastName', 'ASC')
+      .orderBy('user.lastname', 'ASC')
       .getMany();
     return doctors;
   }
