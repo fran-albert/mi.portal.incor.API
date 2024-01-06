@@ -5,6 +5,7 @@ postgres
 mysql
 
 .env
+.env.production
 
 
 # Logs
