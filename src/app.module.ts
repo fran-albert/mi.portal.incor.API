@@ -7,7 +7,6 @@ import { CitiesModule } from './cities/cities.module';
 import { StatesModule } from './states/states.module';
 import { AuthModule } from './auth/auth.module';
 import { LabsModule } from './labs/labs.module';
-import { DataLabsModule } from './data-labs/data-labs.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config';
 import { EmailService } from './email/email.service';
@@ -42,7 +41,6 @@ import { EmailModule } from './email/email.module';
     StatesModule,
     AuthModule,
     LabsModule,
-    DataLabsModule,
     UploadModule,
     ConfigModule.forRoot({
       isGlobal: true,

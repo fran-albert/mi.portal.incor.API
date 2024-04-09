@@ -1,4 +1,3 @@
-import { DataLab } from 'src/data-labs/entities/data-lab.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -18,9 +17,6 @@ export class Lab {
   @ManyToOne(() => User, (user) => user.labs, { nullable: false })
   @JoinColumn({ name: 'idPatient' })
   user: User;
-
-  @OneToOne(() => DataLab, (datalab) => datalab.lab, { eager: true })
-  datalab: DataLab;
 
   @Column()
   name: string;

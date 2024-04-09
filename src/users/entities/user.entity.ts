@@ -50,9 +50,6 @@ export class User {
   @Column('simple-array')
   role: Role[];
 
-  @DeleteDateColumn()
-  deletedAt: Date;
-
   @Column({
     type: 'uuid',
     unique: true,

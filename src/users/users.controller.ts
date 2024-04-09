@@ -20,12 +20,12 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@Auth(Role.PACIENTE)
+// @Auth(Role.PACIENTE)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Auth(Role.SECRETARIA)
+  // @Auth(Role.SECRETARIA)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
@@ -36,13 +36,13 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Auth(Role.MEDICO, Role.SECRETARIA)
+  // @Auth(Role.MEDICO, Role.SECRETARIA)
   @Get('/patients')
   async getPatients() {
     return this.usersService.getPatients();
   }
 
-  @Auth(Role.SECRETARIA)
+  // @Auth(Role.SECRETARIA)
   @Get('/doctors')
   async getDoctors() {
     return this.usersService.getDoctors();

@@ -25,14 +25,14 @@ export class AuthService {
   async register(registerDto: RegisterDto) {
     await this.userService.findOneByEmail(registerDto.email);
 
-    const newPlayer = {
+    const newUser = {
       ...registerDto,
       password: await bcryptjs.hash(registerDto.dni, 10),
       city: { id: Number(registerDto.idCity) },
       role: [Role.PACIENTE],
     };
 
-    await this.userService.create(newPlayer);
+    await this.userService.create(newUser);
 
     return {
       message: 'User created successfully',
